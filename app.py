@@ -5,7 +5,7 @@ app = Flask(__name__)
 # Sample data to be returned as JSON
 sample_data = {
     "message": "Hello, this is a simple Flask API!",
-    "data": [1, 2, 3, 4, 5]
+    "data": [1,4, 5]
 }
 
 @app.route('/')
