@@ -11,6 +11,7 @@ blp = Blueprint("stores", __name__, description="Operation on stores")
 
 @blp.route('/store/<string:store_id>')
 class Store(MethodView):
+    @blp.response(200, StoreSchema)
     def get(self, store_id):
         try: 
             return jsonify({"message": "Store by id", "store_id": store_id})
@@ -18,9 +19,11 @@ class Store(MethodView):
             abort(404, message="Stores not found")
 
     @blp.arguments(StoreUpdateSchema)
+    # @blp.response(200, StoreSchema) # order matters
     def put(self, store_data, store_id ):
         try:
-            return {"message": "Store updated by id", "store_id": store_id, **store_data }
+            store_db_data = {"id": "34", "name": "Adidas"}
+            return store_db_data
         except KeyError:
             abort(404, message="Stores not found")
 
@@ -33,9 +36,13 @@ class Store(MethodView):
 
 @blp.route('/store')
 class StoreList(MethodView):
+    @blp.response(200, StoreSchema(many=True))
     def get(self):
-        return jsonify({"message": "Stores all"})
+        store_db_data = {"id": "34", "name": "Adidas"}
+        return store_db_data
 
     @blp.arguments(StoreSchema)
+    @blp.response(201, StoreSchema)
     def post(self, store_data):
-        return jsonify({"message": "Added new store", **store_data})
+        store_db_data = {"id": "34", "name": "Adidas"}
+        return store_db_data

@@ -5,5 +5,5 @@ class StoreSchema(Schema):
     name = fields.Str(required=True)
 
 class StoreUpdateSchema(Schema):
-    name = fields.Str()
+    name = fields.Str(required=True)
 
