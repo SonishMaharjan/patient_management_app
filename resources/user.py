@@ -37,7 +37,7 @@ class User(MethodView):
 class UserList(MethodView):
     @blp.response(200, UserSchema(many=True))
     def get(self):
-        user_db_data = {"id": "34", "name": "Adidas"}
+        user_db_data = [{"id": "34", "name": "Adidas"}]
         return user_db_data
 
     @blp.arguments(UserSchema)

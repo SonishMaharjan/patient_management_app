@@ -1,7 +1,7 @@
 from db import db
 
 class UploadedFileModel(db.Model):
-    __table__ = "uploaded_files"
+    __tablename__ = "uploaded_files"
     
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), nullable =  False)

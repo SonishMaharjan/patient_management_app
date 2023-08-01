@@ -1,12 +1,12 @@
 from db import db
 
 class UserModel(db.Model):
-    __table__ = "users"
+    __tablename__ = "users"
     
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), nullable =  False)
 
-    uploaded_files = db.relationship("UploadedFileModel", back_populates="user", lazy="dynamic") # in storeModel
+    uploaded_files = db.relationship("UploadedFileModel", back_populates="user", lazy="dynamic") 
 
 
 

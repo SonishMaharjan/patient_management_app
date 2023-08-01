@@ -1,2 +1,3 @@
 from models.user import UserModel
-# from models.item impore ItemModel
+
+from models.uploaded_file import UploadedFileModel
