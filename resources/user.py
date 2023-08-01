@@ -19,24 +19,32 @@ class User(MethodView):
     @blp.response(200, UserSchema)
     def get(self, user_id):
         try: 
-            return jsonify({"message": "User by id", "user_id": user_id})
+            user = UserModel.query.get_or_404(user_id)
+            
+            return user
         except KeyError:
             abort(404, message="users not found")
 
     @blp.arguments(UserUpdateSchema)
-    # @blp.response(200, UserSchema) # order matters
+    @blp.response(200, UserSchema) # order matters
     def put(self, user_data, user_id ):
         try:
-            user_db_data = {"id": "34", "name": "Adidas"}
-            return user_db_data
+            user = UserModel.query.get_or_404(user_id)
+            
+            raise NotImplementedError("Updating user is not implemented")
+
+            return user
         except KeyError:
             abort(404, message="users not found")
 
     def delete(self, user_id):
-        try:
-            return jsonify({"message": "User by id deleted",  "user_id": user_id})
-        except KeyError:
-            abort(404, message="users not found")
+        user = UserModel.query.get_or_404(user_id)
+
+        raise NotImplementedError("Deleteing user is not implemented")
+        # try:
+        #     return jsonify({"message": "User by id deleted",  "user_id": user_id})
+        # except KeyError:
+        #     abort(404, message="users not found")
 
 
 @blp.route('/user')
