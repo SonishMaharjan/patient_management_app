@@ -4,7 +4,13 @@ from flask import request, jsonify
 from flask.views import MethodView
 from flask_smorest import Blueprint, abort
 
+from models import UserModel
+
 from schemas import UserSchema, UserUpdateSchema
+
+from db import db
+
+from sqlalchemy.exc import SQLAlchemyError
 
 blp = Blueprint("users", __name__, description="Operation on users")
 
@@ -43,5 +49,13 @@ class UserList(MethodView):
     @blp.arguments(UserSchema)
     @blp.response(201, UserSchema)
     def post(self, user_data):
-        user_db_data = {"id": "34", "name": "Adidas"}
-        return user_db_data
+        user = UserModel(**user_data)
+        
+        try: 
+            db.session.add(user)
+            db.session.commit()
+            
+        except SQLAlchemyError:
+            abort(500, message="An error occured while inserting items.")
+            
+        return user
