@@ -51,8 +51,7 @@ class User(MethodView):
 class UserList(MethodView):
     @blp.response(200, UserSchema(many=True))
     def get(self):
-        user_db_data = [{"id": "34", "name": "Adidas"}]
-        return user_db_data
+        return UserModel.query.all()
 
     @blp.arguments(UserSchema)
     @blp.response(201, UserSchema)

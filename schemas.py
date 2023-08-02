@@ -22,3 +22,7 @@ class PlainUploadedFileSchema(Schema):
 class UploadedFileSchema(PlainUploadedFileSchema):
     user_id = fields.Int(required=True, load_only=True)
     user = fields.Nested(PlainUserSchema(), dump_only=True)
+    
+class UploadedFileUpdateSchema(Schema):
+    name = fields.Str(required=True)
+    user_id = fields.Int()
