@@ -3,10 +3,13 @@ from flask import request, jsonify
 
 from flask.views import MethodView
 from flask_smorest import Blueprint, abort
+from passlib.hash import pbkdf2_sha256
+
+from flask_jwt_extended import create_access_token
 
 from models import UserModel
 
-from schemas import UserSchema, UserUpdateSchema
+from schemas import UserSchema, UserUpdateSchema, PlainUserSchema
 
 from db import db
 
@@ -14,7 +17,38 @@ from sqlalchemy.exc import SQLAlchemyError
 
 blp = Blueprint("users", __name__, description="Operation on users")
 
-@blp.route('/user/<string:user_id>')
+
+@blp.route("/register")
+class UserRegister(MethodView):
+    @blp.arguments(PlainUserSchema)
+    @blp.response(201, PlainUserSchema)
+    def post(self, user_data):
+        if UserModel.query.filter(UserModel.name == user_data["name"]).first():
+            abort(409, message="A user already exists")
+            
+        user = UserModel(name=user_data["name"],
+                         password= pbkdf2_sha256.hash(user_data["password"]))
+        
+        db.session.add(user)
+        db.session.commit()
+        
+        return user
+            
+        
+@blp.route('/login')
+class UserLogin(MethodView):
+    @blp.arguments(PlainUserSchema)
+    def post(self, user_data):
+        user = UserModel.query.filter(UserModel.name == user_data["name"]).first()
+        
+        if user and pbkdf2_sha256.verify(user_data["password"], user.password):
+            access_token = create_access_token(identity=user.id)
+            return {"access_token": access_token}
+        
+        abort(401, message="Invalid Credentials.")
+    
+    
+@blp.route('/user/<int:user_id>')
 class User(MethodView):
     @blp.response(200, UserSchema)
     def get(self, user_id):
