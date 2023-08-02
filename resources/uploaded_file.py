@@ -57,9 +57,9 @@ class User(MethodView):
 
 @blp.route('/uploaded-file')
 class UploadedFileList(MethodView):
+    @jwt_required()
     @blp.response(200, UploadedFileSchema(many=True))
     def get(self):
-        
         return UploadedFileModel.query.all()
 
     @jwt_required()

@@ -7,9 +7,9 @@ from flask_smorest import Api
 
 from flask_jwt_extended import JWTManager
 
+from blocklist import BLOCKLIST
+
 from db import db
-
-
 
 import models
 
@@ -36,6 +36,23 @@ def create_app(db_url=None):
     
     app.config["JWT_SECRET_KEY"] = "my-jwt-secret-key" # secrets.SystemRandom().getrandbits(128)
     jwt = JWTManager(app)
+    
+    # FOR LOGGING OUT / MAKE TOKEN INVALID BY ADDING IN BLOCKLIST
+    @jwt.token_in_blocklist_loader
+    def check_if_token_in_blocklist(jwt_header, jwt_payload):
+        return jwt_payload["jti"] in BLOCKLIST
+    
+    # called wheen invalid user is used
+    @jwt.revoked_token_loader
+    def revoked_token_callback(jwt_header, jwt_payload):
+        return (
+                jsonify(
+                    { 
+                     "description": "The token has been revoked",
+                     "error": "token_revoked"
+                     }
+                ),
+                401)
     
     # add extra information in jwt token
     @jwt.additional_claims_loader
