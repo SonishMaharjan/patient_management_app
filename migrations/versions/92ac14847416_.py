@@ -1,8 +1,8 @@
-"""Initial migration
+"""empty message
 
-Revision ID: 1dadfbb2850d
+Revision ID: 92ac14847416
 Revises: 
-Create Date: 2023-08-02 17:19:19.956580
+Create Date: 2023-08-02 18:35:45.097672
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '1dadfbb2850d'
+revision = '92ac14847416'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -22,15 +22,15 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(length=80), nullable=False),
     sa.Column('password', sa.String(length=80), nullable=False),
-    sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('name')
+    sa.PrimaryKeyConstraint('id', name=op.f('pk_users')),
+    sa.UniqueConstraint('name', name=op.f('uq_users_name'))
     )
     op.create_table('uploaded_files',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(length=80), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=False),
-    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
-    sa.PrimaryKeyConstraint('id')
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], name=op.f('fk_uploaded_files_user_id_users')),
+    sa.PrimaryKeyConstraint('id', name=op.f('pk_uploaded_files'))
     )
     # ### end Alembic commands ###
 

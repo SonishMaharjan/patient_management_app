@@ -4,6 +4,7 @@ from marshmallow import Schema, fields
 class PlainUserSchema(Schema):
     id = fields.Str(dump_only=True) # add only when returning data from api
     name = fields.Str(required=True)
+    username = fields.Str(required=True)
     password = fields.Str(required=True, load_only=True)
 
     
