@@ -11,6 +11,8 @@ from db import db
 
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 
+from flask_jwt_extended import jwt_required
+
 blp = Blueprint("uploaded_files", __name__, description="Operation on uploaded file")
 
 
@@ -60,6 +62,7 @@ class UploadedFileList(MethodView):
         
         return UploadedFileModel.query.all()
 
+    @jwt_required()
     @blp.arguments(UploadedFileSchema)
     @blp.response(201, UploadedFileSchema)
     def post(self, uploaded_file):
