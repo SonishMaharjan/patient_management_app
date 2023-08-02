@@ -30,8 +30,11 @@ class User(MethodView):
     def put(self, user_data, user_id ):
         try:
             user = UserModel.query.get_or_404(user_id)
+        
+            user.name = user_data["name"]
             
-            raise NotImplementedError("Updating user is not implemented")
+            db.session.add(user)
+            db.session.commit()
 
             return user
         except KeyError:
@@ -39,8 +42,12 @@ class User(MethodView):
 
     def delete(self, user_id):
         user = UserModel.query.get_or_404(user_id)
+        
+        db.session.delete(user)
+        db.session.commit()
+        
+        return {"message": "User is deleted"}, 200
 
-        raise NotImplementedError("Deleteing user is not implemented")
         # try:
         #     return jsonify({"message": "User by id deleted",  "user_id": user_id})
         # except KeyError:
