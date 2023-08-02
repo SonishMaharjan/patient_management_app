@@ -54,6 +54,18 @@ def create_app(db_url=None):
                 ),
                 401)
     
+    
+    @jwt.needs_fresh_token_loader
+    def token_not_fresh_callback(jwt_header, jwt_payload):
+        return ( 
+                jsonify(
+                    {
+                        "description": "The token is not fresh",
+                        "error": "resh_token_required"
+                    }
+                )
+                )
+    
     # add extra information in jwt token
     @jwt.additional_claims_loader
     def add_claims_to_jwt(identity):

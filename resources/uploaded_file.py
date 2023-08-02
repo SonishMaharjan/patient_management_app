@@ -62,6 +62,7 @@ class UploadedFileList(MethodView):
     def get(self):
         return UploadedFileModel.query.all()
 
+    # @jwt_required(fresh=True): if always new token is required.
     @jwt_required()
     @blp.arguments(UploadedFileSchema)
     @blp.response(201, UploadedFileSchema)
